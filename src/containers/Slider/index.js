@@ -8,10 +8,9 @@ const Slider = () => {
   const { data } = useData();
   const [index, setIndex] = useState(0);
   const byDateDesc = data?.focus.sort((evtA, evtB) =>
-    // Modification sens de sort Avant : evtA < evtB Après :
-  new Date(evtB.date) > new Date(evtA.date) ? 1 : -1
-    // new Date(evtA.date) < new Date(evtB.date) ? -1 : 1
+    new Date(evtA.date) < new Date(evtB.date) ? -1 : 1
   );
+  
   const nextCard = () => {
     // Ajout d'une verification
     if (byDateDesc !== undefined) {
@@ -28,10 +27,8 @@ const Slider = () => {
   return (
     <div className="SlideCardList">
       {byDateDesc?.map((event, idx) => (
-        <>
-          <div
-            key={event.title} 
-            className={`SlideCard SlideCard--${
+        <div key={event.title}>
+          <div className={`SlideCard SlideCard--${
               index === idx ? "display" : "hide"
             }`}
           >
@@ -52,7 +49,7 @@ const Slider = () => {
                 key={`${_.title}`}
                 type="radio"
                 name="radio-button"
-                // remplace idx par index
+                // remplacer idx par index
                 checked={index === radioIdx}
                 // Ajout readOnly
                 // readOnly est utilisé pour rendre un champ de formulaire non modifiable par l'utilisateur
@@ -61,7 +58,7 @@ const Slider = () => {
               ))}
             </div>
           </div>
-        </>
+        </div>
       ))}
     </div>
   );
