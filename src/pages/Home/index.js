@@ -13,7 +13,21 @@ import Modal from "../../containers/Modal";
 import { useData } from "../../contexts/DataContext";
 
 const Page = () => {
-  const {last} = useData()
+  const {data} = useData()
+  
+  // last verifie si data existe, que data.events existe, et que data.events contient au moins un élément.
+  const last = data && data.events && data.events.length > 0
+  // reduce sert à parcourir les événements et comparer les dates afin de trouver l'événement le plus récent.
+      ? data.events.reduce((latest, current) => {
+          // Utiliser la date pour comparer et trouver la prestation la plus récente
+          const latestDate = new Date(latest.date);
+          const currentDate = new Date(current.date);
+
+        // currentDate > latestDate ? current : latest compare les dates des événements latest et current. Si la date de current est plus récente que celle de latest, current devient le nouvel événement le plus récent.
+          return currentDate > latestDate ? current : latest;
+        })
+      : null;
+
   return <>
     <header>
       <Menu />
@@ -116,17 +130,16 @@ const Page = () => {
     <footer className="row">
       <div className="col presta">
         <h3>Notre derniére prestation</h3>
-        {/* Si tast est true, alors affiche EventCard */}
-        {last && (
+        {last && 
           <EventCard
-          imageSrc={last?.cover}
-          imageAlt={last?.description}
-          title={last?.title}
-          date={new Date(last?.date)}
-          small
-          label="boom"
-        />
-        )}
+            imageSrc={last?.cover}
+            imageAlt={last?.description}
+            title={last?.title}
+            date={new Date(last?.date)}
+            small
+            label="boom" 
+            /> 
+          }
       </div>
       <div className="col contact">
         <h3>Contactez-nous</h3>
