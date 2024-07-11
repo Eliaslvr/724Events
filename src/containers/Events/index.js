@@ -14,12 +14,20 @@ const EventList = () => {
   const [type, setType] = useState();
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Fonction de tri par mois
+  const sortByMonth = (events) => 
+    events.sort((a, b) => 
+      // "new Date(a.date)"" convertit la propriété date de l'objet "a" en un objet Date.
+      new Date(a.date).getMonth() - new Date(b.date).getMonth());
+
+  // Trier les événements par mois avant de les filtrer
+  const sortedEvents = sortByMonth(data?.events || []);
+
   const filteredEvents = (
     (!type
-      ? data?.events
+      ? sortedEvents
       // Ajout filter en fonction du type
-     : data?.events.filter((event) => event.type === type)) || []
-
+     : sortedEvents.filter((event) => event.type === type)) || []
   ).filter((event, index) => {
     if (
       (currentPage - 1) * PER_PAGE <= index &&
@@ -29,12 +37,15 @@ const EventList = () => {
     }
     return false;
   });
+
   const changeType = (evtType) => {
     setCurrentPage(1);
     setType(evtType);
   };
+
   const pageNumber = Math.floor((filteredEvents?.length || 0) / PER_PAGE) + 1;
   const typeList = new Set(data?.events.map((event) => event.type));
+
   return (
     <>
       {error && <div>An error occured</div>}
